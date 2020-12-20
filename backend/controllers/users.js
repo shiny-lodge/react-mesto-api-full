@@ -1,25 +1,41 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../middlewares/errors/unauthorized-err.js');
+const NotFoundError = require('../middlewares/errors/not-found-err.js');
+const BadRequestError = require('../middlewares/errors/bad-req-err.js');
 const User = require('../models/user');
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name, about, avatar, email,
+  } = req.body;
 
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
-      email: req.body.email,
+      email,
       password: hash,
       name,
       about,
       avatar,
-    }))
-    .then((user) => res.send(user))
-    .catch(next);
+    }).catch((err) => {
+      if (err.name === 'MongoError') {
+        throw new BadRequestError('Этот адрес уже используется');
+      }
+      throw new BadRequestError(`Некорректный запрос: ${err.message}`);
+    })
+      .then((user) => {
+        const userData = {
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        };
+        res.send(userData);
+      })).catch(next);
 };
 
 module.exports.getUserInfo = (req, res, next) => {
-  User.findById(req.user._id).orFail().then((user) => {
+  User.findById(req.user._id).orFail(new NotFoundError('Пользователь не найден')).then((user) => {
     res.send(user);
   })
     .catch(next);
@@ -32,8 +48,9 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.id).orFail().then((user) => {
-    res.send(user);
+  User.findById(req.params.id).orFail(new NotFoundError('Пользователь не найден')).then((user) => {
+    const userData = { email: user.email };
+    res.send(userData);
   })
     .catch(next);
 };

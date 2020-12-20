@@ -10,7 +10,7 @@ router.get('/users', getUsers);
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }),
 }), updateUserInfo);
 
@@ -18,7 +18,7 @@ router.get('/users/me', getUserInfo);
 
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().pattern(/^(https?:\/\/)?([\da-z\\.-]+)\.([a-z\\.]{2,6})([\\/\w \\.-]*)*\/?$/),
   }),
 }), updateUserAvatar);
 

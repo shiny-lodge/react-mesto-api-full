@@ -20,26 +20,43 @@ const { PORT = 3000 } = process.env;
 
 app.use(requestLogger);
 app.use(bodyParser.json());
-app.post('/api/signin', login);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
+app.post('/api/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
 app.post('/api/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().pattern(/^(https?:\/\/)?([\da-z\\.-]+)\.([a-z\\.]{2,6})([\\/\w \\.-]*)*\/?$/),
   }),
 }), createUser);
-app.use('/api', auth, cards);
-app.use('/api', auth, users);
-app.get('*', (req, res, next) => {
+
+app.use('/api/cards*', auth);
+app.use('/api', cards);
+app.use('/api/users*', auth);
+app.use('/api', users);
+
+app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
 app.use(errorLogger);
 
 app.use(errors());
-app.use((err, req, res) => {
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, _) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode)
     .send({
