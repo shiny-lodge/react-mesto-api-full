@@ -22,7 +22,7 @@
 * Фронтенд: React  
 * Бэкенд: Node.js, ExpressJS 
 * СУБД: MongoDB 
-* Хостинг: Яндекс.Облако 
+* Хостинг: Яндекс.Облако(https://cloud.yandex.ru)
 * Сервер: Ubuntu 20.04 (Focal Fossa) 
 * Управление SSL-сертификатами: certbot 
 * HTTP-сервер: nginx 
@@ -34,3 +34,5 @@
 * [mesto-lodge.students.nomoreparties.space](https://mesto-lodge.students.nomoreparties.space) 
 * [www.mesto-lodge.students.nomoreparties.space](https://www.mesto-lodge.students.nomoreparties.space) 
 * ip-адрес: [178.154.224.215](http://178.154.224.215)
+
+Обратиться к серверу можно по адресу: https://mesto-lodge.students.nomoreparties.space/api
