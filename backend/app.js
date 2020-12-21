@@ -20,7 +20,8 @@ const { PORT = 3000 } = process.env;
 
 app.use(requestLogger);
 app.use(bodyParser.json());
-app.get('/crash-test', () => {
+
+app.get('/api/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);

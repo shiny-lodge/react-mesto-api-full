@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../middlewares/errors/not-found-err.js');
 const ForbiddenError = require('../middlewares/errors/forbidden-err.js');
+const BadRequestError = require('../middlewares/errors/bad-req-err.js');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -17,13 +18,19 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId).orFail(new NotFoundError('Карточка не найдена')).then((card) => {
-    if (card.owner.toString() === req.user._id) {
-      res.status(200).send(card);
-    } else {
-      throw new ForbiddenError('Недостаточно прав');
-    }
-  })
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
+    .then((card) => {
+      if (!card) throw new BadRequestError('Карточка с таким id не найдена');
+      if (card.owner.toString() === req.user._id) {
+        Card.findByIdAndRemove(cardId)
+          .then((cardToRemove) => res.status(200).send(cardToRemove))
+          .catch(next);
+      } else {
+        throw new ForbiddenError('Вы не можете удалять карточки, которые были созданы не вами');
+      }
+    })
     .catch(next);
 };
 
