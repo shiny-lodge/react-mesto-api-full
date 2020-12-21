@@ -22,7 +22,7 @@
 * Фронтенд: React  
 * Бэкенд: Node.js, ExpressJS 
 * СУБД: MongoDB 
-* Хостинг: Яндекс.Облако(https://cloud.yandex.ru)
+* Хостинг: [Яндекс.Облако](https://cloud.yandex.ru)
 * Сервер: Ubuntu 20.04 (Focal Fossa) 
 * Управление SSL-сертификатами: certbot 
 * HTTP-сервер: nginx 
