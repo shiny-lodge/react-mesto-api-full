@@ -29,10 +29,9 @@
 * Среда тестирования: Jest 
  
 ## Ссылки на проект 
- 
-Проект доступен по следующим адресам: 
-* [mesto-lodge.students.nomoreparties.space](https://mesto-lodge.students.nomoreparties.space) 
-* [www.mesto-lodge.students.nomoreparties.space](https://www.mesto-lodge.students.nomoreparties.space) 
-* ip-адрес: [178.154.224.215](http://178.154.224.215)
 
-Обратиться к серверу можно по адресу: https://mesto-lodge.students.nomoreparties.space/api
+<span style="color:red">На настоящий момент осуществляется перенос проекта на новый сервер. Также будет присвоено новое доменное имя. До конца переноса фронтенд доступен только локально.</span>
+
+API: https://api.zabavnaja.ru
+
+
